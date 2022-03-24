@@ -100,7 +100,11 @@ public class GenotypesContextUnitTest extends VariantBaseTest {
 
         @Override
         public GenotypesContext make(final List<Genotype> initialSamples) {
-            return new LazyGenotypesContext(this, initialSamples, initialSamples.size());
+            GenotypesContext gc = GenotypesContext.copy(initialSamples);
+            gc.ensureSampleNameMap();
+            gc.ensureSampleOrdering();
+            return new LazyGenotypesContext(this, initialSamples, initialSamples.size(), gc.sampleNameToOffset,
+                    gc.sampleNamesInOrder);
         }
 
         @Override

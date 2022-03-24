@@ -37,6 +37,8 @@ public class VCFEncoder {
 
     private VCFHeader header;
 
+    private Boolean samplesReordered = null;
+
     private boolean allowMissingFieldsInHeader = false;
 
     private boolean outputTrailingFormatFields = false;
@@ -157,7 +159,10 @@ public class VCFEncoder {
 
         // FORMAT
         final GenotypesContext gc = context.getGenotypes();
-        if (gc.isLazyWithData() && ((LazyGenotypesContext) gc).getUnparsedGenotypeData() instanceof String) {
+        if (samplesReordered == null) {
+            samplesReordered = checkIfSamplesReordered(gc);
+        }
+        if (!samplesReordered && gc.isLazyWithData() && ((LazyGenotypesContext) gc).getUnparsedGenotypeData() instanceof String) {
             vcfOutput.append(VCFConstants.FIELD_SEPARATOR);
             vcfOutput.append(((LazyGenotypesContext) gc).getUnparsedGenotypeData().toString());
         } else {
@@ -177,6 +182,20 @@ public class VCFEncoder {
                 appendGenotypeData(context, alleleStrings, genotypeAttributeKeys, vcfOutput);
             }
         }
+    }
+
+    private boolean checkIfSamplesReordered(final GenotypesContext gc) {
+        if (this.header.getNGenotypeSamples() != gc.getSampleNames().size()) {
+            return true;
+        } else {
+            for (int i = 0; i < this.header.getNGenotypeSamples(); i++) {
+                // final String sample : this.header.getGenotypeSamples()
+                if (gc.getSampleI(this.header.getGenotypeSamples().get(i)) != i) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     VCFHeader getVCFHeader() {

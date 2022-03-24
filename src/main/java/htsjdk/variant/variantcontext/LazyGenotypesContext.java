@@ -122,14 +122,19 @@ public class LazyGenotypesContext extends GenotypesContext {
 
     /**
      * Creates a new lazy loading genotypes context using the LazyParser to create
-     * genotypes data on demand.
+     * genotypes data on demand, with sample ID information attached for easy access.
      *
      * @param parser the parser to be used to load on-demand genotypes data
      * @param unparsedGenotypeData the encoded genotypes data that we will decode if necessary
      * @param nUnparsedGenotypes the number of genotypes that will be produced if / when we actually decode the genotypes data
+     * @param sampleNameToOffset map of sample name to index in the order of the genotypes, containing each
+     *                           sample name in sampleNamesInOrder. From parsing input VCF header
+     * @param sampleNamesInOrder a list of sample names, one for each genotype in genotypes, sorted in alphabetical
+     *                           order. From parsing input VCF header
      */
-    public LazyGenotypesContext(final LazyParser parser, final Object unparsedGenotypeData, final int nUnparsedGenotypes) {
-        super(EMPTY);
+    public LazyGenotypesContext(final LazyParser parser, final Object unparsedGenotypeData, final int nUnparsedGenotypes,
+                                final Map<String, Integer> sampleNameToOffset, final List<String> sampleNamesInOrder) {
+        super(EMPTY, sampleNameToOffset, sampleNamesInOrder);
         this.parser = parser;
         this.unparsedGenotypeData = unparsedGenotypeData;
         this.nUnparsedGenotypes = nUnparsedGenotypes;

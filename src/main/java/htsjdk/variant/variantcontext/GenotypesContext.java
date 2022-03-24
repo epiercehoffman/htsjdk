@@ -450,7 +450,7 @@ public class GenotypesContext implements List<Genotype>, Serializable {
         return offset == null ? null : getGenotypes().get(offset);
     }
 
-    private Integer getSampleI(final String sampleName) {
+    public Integer getSampleI(final String sampleName) {
         ensureSampleNameMap();
         return sampleNameToOffset.get(sampleName);
     }

@@ -447,11 +447,8 @@ public abstract class AbstractVCFCodec extends AsciiFeatureCodec<VariantContext>
         if (parts.length > NUM_STANDARD_FIELDS && includeGenotypes) {
             final LazyGenotypesContext.LazyParser lazyParser = new LazyVCFGenotypesParser(alleles, chr, pos);
             final int nGenotypes = header.getNGenotypeSamples();
-            LazyGenotypesContext lazy = new LazyGenotypesContext(lazyParser, parts[8], nGenotypes);
-
-            // did we resort the sample names?  If so, we need to load the genotype data
-            if ( !header.samplesWereAlreadySorted() )
-                lazy.decode();
+            LazyGenotypesContext lazy = new LazyGenotypesContext(lazyParser, parts[8], nGenotypes,
+                    header.getSampleNameToOffset(), header.getSampleNamesInOrder());
 
             builder.genotypesNoValidation(lazy);
         }

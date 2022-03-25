@@ -175,6 +175,20 @@ public class LazyGenotypesContext extends GenotypesContext {
     }
 
     @Override
+    protected void invalidateSampleNameMap() {
+        // if the cache is invalidated, and we haven't loaded our data yet, do so
+        if ( ! loaded ) decode();
+        super.invalidateSampleNameMap();
+    }
+
+    @Override
+    protected void invalidateSampleOrdering() {
+        // if the cache is invalidated, and we haven't loaded our data yet, do so
+        if ( ! loaded ) decode();
+        super.invalidateSampleOrdering();
+    }
+
+    @Override
     public boolean isEmpty() {
         // optimization -- we know the number of samples in the unparsed data, so use it here to
         // avoid parsing just to know if the genotypes context is empty

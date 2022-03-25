@@ -174,43 +174,6 @@ public class LazyGenotypesContext extends GenotypesContext {
         }
     }
 
-    /**
-     * Overrides the ensure* functionality.  If the data hasn't been loaded
-     * yet and we want to build the cache, just decode it and we're done.  If we've
-     * already decoded the data, though, go through the super class
-     */
-    @Override
-    protected synchronized void ensureSampleNameMap() {
-        if ( ! loaded ) {
-            decode(); // will load up all of the necessary data
-        } else {
-            super.ensureSampleNameMap();
-        }
-    }
-
-    @Override
-    protected synchronized void ensureSampleOrdering() {
-        if ( ! loaded ) {
-            decode(); // will load up all of the necessary data
-        } else {
-            super.ensureSampleOrdering();
-        }
-    }
-
-    @Override
-    protected void invalidateSampleNameMap() {
-        // if the cache is invalidated, and we haven't loaded our data yet, do so
-        if ( ! loaded ) decode();
-        super.invalidateSampleNameMap();
-    }
-
-    @Override
-    protected void invalidateSampleOrdering() {
-        // if the cache is invalidated, and we haven't loaded our data yet, do so
-        if ( ! loaded ) decode();
-        super.invalidateSampleOrdering();
-    }
-
     @Override
     public boolean isEmpty() {
         // optimization -- we know the number of samples in the unparsed data, so use it here to
